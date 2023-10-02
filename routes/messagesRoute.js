@@ -13,7 +13,7 @@ router.post("/new-message", authMiddleware, async (req, res) => {
     // update last chat message
     await Chat.findOneAndUpdate(
       { _id: req.body.chat },
-      { lastMessage: savedMessage._id, unread: { $inc: 1 } }
+      { lastMessage: savedMessage._id, $inc: { unreadMessages: 1 } }
     );
 
     res.send({
