@@ -20,7 +20,15 @@ const io = require("socket.io")(server, {
 
 // check the socket connection from client
 io.on("connection", (socket) => {
-  console.log("socket id: ", socket.id);
+  socket.on("join-room", (userId) => {
+    socket.join(userId);
+    console.log("user joined ", userId);
+  });
+
+  socket.on("send-message", ({ text, sender, receipent }) => {
+    // send message to receipent (John)
+    io.to(receipent).emit("receive-message", { text, sender });
+  });
 });
 
 app.use("/api/users", usersRoute);
