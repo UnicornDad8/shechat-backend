@@ -22,12 +22,14 @@ const io = require("socket.io")(server, {
 io.on("connection", (socket) => {
   socket.on("join-room", (userId) => {
     socket.join(userId);
-    console.log("user joined ", userId);
+    // console.log("user joined ", userId);
   });
 
-  socket.on("send-message", ({ text, sender, receipent }) => {
-    // send message to receipent (John)
-    io.to(receipent).emit("receive-message", { text, sender });
+  // send message to clients (who are in the same room)
+  socket.on("send-message", (message) => {
+    io.to(message.members[0])
+      .to(message.members[1])
+      .emit("receive-message", message);
   });
 });
 
